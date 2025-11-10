@@ -12,12 +12,19 @@ namespace Assignment
 	/// </summary>
 	public class DataLogger
 	{
+		private readonly NetworkService _networkService;
+
 		private List<TrialEvent> _events = new List<TrialEvent>();
 		private List<SignalSample> _signalSamples = new List<SignalSample>();
 		private long _sessionStartTimeMs;
 
 		public bool IsRecording { get; private set; }
 		public string SessionId { get; private set; }
+
+		public DataLogger(NetworkService networkService)
+		{
+			_networkService = networkService;
+		}
 
 		public void StartSession()
 		{
@@ -39,7 +46,7 @@ namespace Assignment
 			_signalSamples.Clear();
 		}
 
-		public void LogTrialEvent(TrialEvent trialEvent)
+		public async void LogTrialEvent(TrialEvent trialEvent)
 		{
 			if (!IsRecording)
 			{
@@ -48,6 +55,8 @@ namespace Assignment
 
 			trialEvent.signalSamples = new List<SignalSample>(_signalSamples);
 			_events.Add(trialEvent);
+
+			await _networkService.PostTrialEvent(trialEvent);
 		}
 
 		public void LogSignalSample(SignalSample signalSample)
@@ -60,7 +69,7 @@ namespace Assignment
 			_signalSamples.Add(signalSample);
 		}
 
-		private void SaveSummary()
+		private async void SaveSummary()
 		{
 			SessionSummary summary = new SessionSummary
 			{
@@ -82,6 +91,8 @@ namespace Assignment
 
 			Debug.Log($"Session summary saved: {path}");
 			Debug.Log(json);
+
+			await _networkService.PostSessionSummary(summary);
 		}
 	}
 }

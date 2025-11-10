@@ -34,12 +34,21 @@ namespace Assignment
 		private bool _isWaitingForResponse;
 		private bool _hasReacted;
 		private TrialStatus _currentTrialStatus;
-		private DataLogger _dataLogger = new DataLogger();
 		private Coroutine _sessionCoroutine;
 
-		private void Start()
+		// Data
+		private DataLogger _dataLogger;
+		private NetworkClient _networkClient;
+		private NetworkService _networkService;
+
+		private void Awake()
 		{
 			_uIManager.SetStartButtonCallback(StartSession);
+
+			// Ideally this should be initialize somewhere else, but I want to limit the scope
+			_networkClient = new NetworkClient("http://localhost:5005");
+			_networkService = new NetworkService(_networkClient);
+			_dataLogger = new DataLogger(_networkService);
 		}
 
 		private void OnEnable()
@@ -99,17 +108,21 @@ namespace Assignment
 		/// <returns></returns>
 		private IEnumerator RunTrial()
 		{
+			// Reset varaibles
 			long stimuliStartMs = -1;
 			long reactionTimeMs = -1;
 			_hasReacted = false;
 
 			_currentTrialStatus = TrialStatus.Incomplete;
 			long trialStartMs = UtcNowMs();
+			float start = Time.time;
 			_dataLogger.StartTrial();
 
-			float start = Time.time;
+
+			// ITI is randomly generated between trials
 			float interTrialInterval = UnityEngine.Random.Range(_minInterTrialInterval, _maxInterTrialInterval);
 
+			// Wait until end of ITI or if the user has responded too early
 			yield return new WaitUntil(() => Time.time - start >= interTrialInterval || _hasReacted);
 
 			if (_hasReacted)
@@ -123,6 +136,7 @@ namespace Assignment
 				_isWaitingForResponse = true;
 				float startTime = Time.time;
 
+				// Wait for an input or a time greater than allowed response time
 				while (_isWaitingForResponse && Time.time - startTime < _maxResponseTime)
 				{
 					if (_hasReacted)
@@ -152,11 +166,11 @@ namespace Assignment
 				reactionTimeMs = reactionTimeMs,
 			};
 
+			// Show feedback
 			_uIManager.ShowTrialFeedback(_currentTrialStatus);
-
 			yield return new WaitForSeconds(_feedbackDuration);
-
 			_uIManager.HideFeedback();
+
 			_dataLogger.LogTrialEvent(trial);
 		}
 	}
