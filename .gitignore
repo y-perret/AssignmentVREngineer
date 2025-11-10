@@ -97,3 +97,42 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Dotnet backend
+
+# Allow backend .NET project files
+!Backend/ReactionBackend/*.csproj
+!Backend/ReactionBackend/*.sln
+
+# Build outputs
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio
+.vs/
+
+# Rider / JetBrains
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# dotenv files (if you use local secrets)
+.env
+
+# ASP.NET local dev certs
+*.pfx
+
+# Publish outputs
+publish/
