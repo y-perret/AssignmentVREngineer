@@ -1,9 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Assignment
 {
+	/// <summary>
+	/// Visual stimulus displayed to the user
+	/// </summary>
 	public class Stimulus : MonoBehaviour
 	{
 		[SerializeField] private Transform _movableStimuli;
@@ -18,15 +20,9 @@ namespace Assignment
 			_startPosition = _movableStimuli.position;
 		}
 
-		private void Update()
-		{
-			if (Keyboard.current.aKey.wasPressedThisFrame)
-				Show();
-
-			if (Keyboard.current.sKey.wasPressedThisFrame)
-				Hide();
-		}
-
+		/// <summary>
+		/// Show the stimulus by moving it out of the resting position
+		/// </summary>
 		public void Show()
 		{
 			if (_moveCoroutine != null)
@@ -37,6 +33,9 @@ namespace Assignment
 			_moveCoroutine = StartCoroutine(Move(_movableStimuli.position, _targetPosition.position, _moveDuration));
 		}
 
+		/// <summary>
+		/// Hide the stimulus by moving it back to resting position
+		/// </summary>
 		public void Hide()
 		{
 			if (_moveCoroutine != null)

@@ -2,10 +2,13 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Assignment.TrialManager;
+using static Assignment.ReactionTrainingManager;
 
 namespace Assignment
 {
+	/// <summary>
+	/// Handles all the UI
+	/// </summary>
 	public class UIManager : MonoBehaviour
 	{
 		[SerializeField] private GameObject _feedback;
@@ -36,6 +39,10 @@ namespace Assignment
 			_feedback.SetActive(false);
 		}
 
+		/// <summary>
+		/// Set callback when the start button is pressed
+		/// </summary>
+		/// <param name="startAction">callback when button is pressed</param>
 		public void SetStartButtonCallback(Action startAction)
 		{
 			_startButton.onClick.RemoveAllListeners();

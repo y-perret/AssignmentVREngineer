@@ -7,6 +7,9 @@ using static Assignment.Utils.TimeUtils;
 
 namespace Assignment
 {
+	/// <summary>
+	/// Handle the logging of the data collected during a session
+	/// </summary>
 	public class DataLogger
 	{
 		private List<TrialEvent> _events = new List<TrialEvent>();
@@ -43,7 +46,7 @@ namespace Assignment
 				return;
 			}
 
-			trialEvent.signalSamples = _signalSamples;
+			trialEvent.signalSamples = new List<SignalSample>(_signalSamples);
 			_events.Add(trialEvent);
 		}
 
@@ -66,8 +69,8 @@ namespace Assignment
 				sessionEndMs = UtcNowMs(),
 				totalTrials = _events.Count,
 				averageReactionTimeMs = (long) (_events.Count > 0 ? _events.Average(e => e.reactionTimeMs) : 0),
-				pctMissedResponses = _events.Count > 0 ? (float) _events.Count(e => e.trialStatus != TrialManager.TrialStatus.Reacted) / _events.Count : 0f,
-				averageSignal = _events.SelectMany(e => e.signalSamples).DefaultIfEmpty().Average(s => s?.value ?? -1),
+				pctMissedResponses = _events.Count > 0 ? (float) _events.Count(e => e.trialStatus != ReactionTrainingManager.TrialStatus.Reacted) / _events.Count : 0f,
+				averageSignalValue = _events.SelectMany(e => e.signalSamples).DefaultIfEmpty().Average(s => s?.value ?? -1),
 				trials = _events
 			};
 

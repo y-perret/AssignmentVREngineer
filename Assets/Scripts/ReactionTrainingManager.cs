@@ -1,12 +1,13 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Assignment.Utils.TimeUtils;
 
 namespace Assignment
 {
-	public class TrialManager : MonoBehaviour
+	/// <summary>
+	/// General mangager responsible for controlling the activity
+	/// </summary>
+	public class ReactionTrainingManager : MonoBehaviour
 	{
 		public enum TrialStatus
 		{
@@ -78,6 +79,10 @@ namespace Assignment
 			_dataLogger.StopSession();
 		}
 
+		/// <summary>
+		/// Run a session composed of mutiple trials
+		/// </summary>
+		/// <returns></returns>
 		private IEnumerator RunSession()
 		{
 			for (_trialIndex = 0; _trialIndex < _trialsCount; _trialIndex++)
@@ -88,11 +93,14 @@ namespace Assignment
 			StopSession();
 		}
 
+		/// <summary>
+		/// Run a single trial
+		/// </summary>
+		/// <returns></returns>
 		private IEnumerator RunTrial()
 		{
 			long stimuliStartMs = -1;
 			long reactionTimeMs = -1;
-			long responseMs = -1;
 			_hasReacted = false;
 
 			_currentTrialStatus = TrialStatus.Incomplete;
@@ -119,8 +127,7 @@ namespace Assignment
 				{
 					if (_hasReacted)
 					{
-						responseMs = UtcNowMs();
-						reactionTimeMs = responseMs - stimuliStartMs;
+						reactionTimeMs = UtcNowMs() - stimuliStartMs;
 						_currentTrialStatus = TrialStatus.Reacted;
 						_isWaitingForResponse = false;
 					}
@@ -142,7 +149,6 @@ namespace Assignment
 				stimuliStartMs = stimuliStartMs,
 				stimulusType = StimuliManager.StimuliType.Mole.ToString(),
 				trialStatus = _currentTrialStatus,
-				responseMs = responseMs,
 				reactionTimeMs = reactionTimeMs,
 			};
 
