@@ -22,6 +22,7 @@ namespace Assignment
 		[SerializeField] private StimuliManager _stimuliManager;
 		[SerializeField] private UIManager _uIManager;
 		[SerializeField] private InputManager _inputManager;
+		[SerializeField] private NetworkConfig _networkConfig;
 
 		[Header("Parameters")]
 		[SerializeField] private int _trialsCount = 10;
@@ -46,7 +47,7 @@ namespace Assignment
 			_uIManager.SetStartButtonCallback(StartSession);
 
 			// Ideally this should be initialize somewhere else, but I want to limit the scope
-			_networkClient = new NetworkClient("http://localhost:5005");
+			_networkClient = new NetworkClient(_networkConfig.BaseUrl);
 			_networkService = new ReactionDataNetworkService(_networkClient);
 			_dataLogger = new DataLogger(_networkService);
 		}

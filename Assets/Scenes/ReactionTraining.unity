@@ -229,6 +229,7 @@ MonoBehaviour:
   _stimuliManager: {fileID: 2123806704}
   _uIManager: {fileID: 542876240}
   _inputManager: {fileID: 1386520984}
+  _networkConfig: {fileID: 11400000, guid: 2243a83a1f1c9224a99feea418ea6d2c, type: 2}
   _trialsCount: 10
   _minInterTrialInterval: 1
   _maxInterTrialInterval: 1.5
