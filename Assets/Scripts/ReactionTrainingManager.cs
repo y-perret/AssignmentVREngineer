@@ -39,7 +39,7 @@ namespace Assignment
 		// Data
 		private DataLogger _dataLogger;
 		private NetworkClient _networkClient;
-		private NetworkService _networkService;
+		private ReactionDataNetworkService _networkService;
 
 		private void Awake()
 		{
@@ -47,7 +47,7 @@ namespace Assignment
 
 			// Ideally this should be initialize somewhere else, but I want to limit the scope
 			_networkClient = new NetworkClient("http://localhost:5005");
-			_networkService = new NetworkService(_networkClient);
+			_networkService = new ReactionDataNetworkService(_networkClient);
 			_dataLogger = new DataLogger(_networkService);
 		}
 

@@ -6,9 +6,9 @@ using UnityEngine;
 namespace Assignment
 {
 	/// <summary>
-	/// Class providing a service using a network client
+	/// Class sending trial events and session summary to the backend using a network client
 	/// </summary>
-	public class NetworkService
+	public class ReactionDataNetworkService
 	{
 		private const string TrialEventEndPointURL = "/api/reaction/events";
 		private const string SummaryEndPointURL = "/api/reaction/summaries";
@@ -16,7 +16,7 @@ namespace Assignment
 
 		private readonly NetworkClient _client;
 
-		public NetworkService(NetworkClient networkClient)
+		public ReactionDataNetworkService(NetworkClient networkClient)
 		{
 			_client = networkClient;
 		}

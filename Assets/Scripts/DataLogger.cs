@@ -12,7 +12,7 @@ namespace Assignment
 	/// </summary>
 	public class DataLogger
 	{
-		private readonly NetworkService _networkService;
+		private readonly ReactionDataNetworkService _networkService;
 
 		private List<TrialEvent> _events = new List<TrialEvent>();
 		private List<SignalSample> _signalSamples = new List<SignalSample>();
@@ -21,7 +21,7 @@ namespace Assignment
 		public bool IsRecording { get; private set; }
 		public string SessionId { get; private set; }
 
-		public DataLogger(NetworkService networkService)
+		public DataLogger(ReactionDataNetworkService networkService)
 		{
 			_networkService = networkService;
 		}
@@ -56,7 +56,15 @@ namespace Assignment
 			trialEvent.signalSamples = new List<SignalSample>(_signalSamples);
 			_events.Add(trialEvent);
 
-			await _networkService.PostTrialEvent(trialEvent);
+			// Try sending the trial event
+			try
+			{
+				await _networkService.PostTrialEvent(trialEvent);
+			}
+			catch
+			{
+				Debug.LogWarning($"Trial Event of trial{trialEvent.trialIndex} could not be sent to the server");
+			}
 		}
 
 		public void LogSignalSample(SignalSample signalSample)
@@ -88,11 +96,17 @@ namespace Assignment
 			// Write locally
 			string path = Path.Combine(Application.dataPath, $"session_{SessionId}.json");
 			File.WriteAllText(path, json);
-
 			Debug.Log($"Session summary saved: {path}");
-			Debug.Log(json);
 
-			await _networkService.PostSessionSummary(summary);
+			// Try sending the session summary
+			try
+			{
+				await _networkService.PostSessionSummary(summary);
+			}
+			catch
+			{
+				Debug.LogWarning($"Session summary {summary.sessionId} could not be sent to the server");
+			}
 		}
 	}
 }
